@@ -45,8 +45,16 @@ struct ContentView: View {
     
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        
         guard answer.count > 0 else {
             wordError(title: "No word entered", message: "There must be characters entered (Minimum of 3 charaters)")
+            return
+        }
+        
+        // Challange 1
+        guard isLongEnough(word: answer) else {
+            wordError(title: "Word is too short", message: "The word must be 3 or more characters.")
+            
             return
         }
         
@@ -113,11 +121,21 @@ struct ContentView: View {
         return misspelledRange.location == NSNotFound
     }
     
+    // Challange 1
+    func isLongEnough(word: String) -> Bool {
+        if word.count < 3 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func wordError(title: String, message: String) {
         errorTitle = title
         errorMessage = message
         isErrorShowing = true
     }
+
     
 }
 
