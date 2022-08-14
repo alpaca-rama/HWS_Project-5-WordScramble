@@ -14,6 +14,10 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var isErrorShowing = false
+    // Challange 3
+    @State private var score = 0
+    // Challange 3 - My Addition
+    @State private var scoreAddedAmount = 0
     
     private let minWordSize = 3
     
@@ -29,9 +33,23 @@ struct ContentView: View {
                     ForEach(usedWords, id: \.self) { word in
                         HStack {
                             Image(systemName: "\(word.count).circle")
+//                                .foregroundColor(wordScoreColor == "blue" ? .red : .black)
+                                .foregroundColor(word.count == 3 ? .red : word.count == 4 ? .red : word.count == 5 ? .blue : word.count == 6 ? .blue : word.count == 7 ? .green : word.count == 8 ? .indigo : .black)
                             Text(word)
                         }
                     }
+                }
+                
+                Section() {
+                    HStack {
+                        Text("Score: \(score)")
+                            .font(.title)
+                        // My own added code
+                        Text("(+\(scoreAddedAmount))")
+                            .foregroundColor(scoreAddedAmount == 1 ? .red : scoreAddedAmount == 2 ? .blue : scoreAddedAmount == 3 ? .green : scoreAddedAmount == 10 ? .indigo : .white)
+                            
+                    }
+                    
                 }
             }
             // Challange 2
@@ -87,6 +105,9 @@ struct ContentView: View {
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
+        
+        updateScore(word: answer)
+        
         newWord = ""
     }
     
@@ -95,6 +116,8 @@ struct ContentView: View {
         withAnimation {
             usedWords.removeAll()
         }
+        // My added code
+        scoreAddedAmount = 0
         
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startWords = try? String(contentsOf: startWordsURL) {
@@ -150,8 +173,26 @@ struct ContentView: View {
         errorMessage = message
         isErrorShowing = true
     }
-
     
+    func updateScore(word: String) {
+        switch word.count {
+        case 3...4:
+            scoreAddedAmount = 1
+            score += scoreAddedAmount
+        case 5:
+            scoreAddedAmount = 2
+            score += scoreAddedAmount
+        case 6...7:
+            scoreAddedAmount = 3
+            score += scoreAddedAmount
+        case 8:
+            scoreAddedAmount = 10
+            score += scoreAddedAmount
+        default:
+            scoreAddedAmount = 0
+            score += scoreAddedAmount
+        }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
