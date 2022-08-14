@@ -15,6 +15,8 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var isErrorShowing = false
     
+    private let minWordSize = 3
+    
     var body: some View {
         NavigationView {
             List {
@@ -54,25 +56,27 @@ struct ContentView: View {
         // Challange 1
         guard isLongEnough(word: answer) else {
             wordError(title: "Word is too short", message: "The word must be 3 or more characters.")
-            
+            return
+        }
+        
+        // Challange 1
+        guard isNotStartingWord(word: answer) else {
+            wordError(title: "Same as starting word", message: "The word cannot be the starting word, '\(rootWord)'")
             return
         }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original!")
-            
             return
         }
         
         guard isPossible(word: answer) else {
             wordError(title: "Word not possible", message: "You can't spell that word from '\(rootWord)'!")
-            
             return
         }
         
         guard isReal(word: answer) else {
             wordError(title: "Word not recognised", message: "You can't just make them up, you know!")
-            
             return
         }
         
@@ -123,12 +127,14 @@ struct ContentView: View {
     
     // Challange 1
     func isLongEnough(word: String) -> Bool {
-        if word.count < 3 {
-            return false
-        } else {
-            return true
-        }
+        return word.count >= minWordSize
     }
+    
+    // Challange 1
+    func isNotStartingWord(word: String) -> Bool {
+        return word != rootWord
+    }
+    
     
     func wordError(title: String, message: String) {
         errorTitle = title
