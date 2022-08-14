@@ -34,6 +34,10 @@ struct ContentView: View {
                     }
                 }
             }
+            // Challange 2
+            .toolbar {
+                Button("Restart", action: startGame)
+            }
             .navigationTitle(rootWord)
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
@@ -87,6 +91,11 @@ struct ContentView: View {
     }
     
     func startGame() {
+        // Challange 2
+        withAnimation {
+            usedWords.removeAll()
+        }
+        
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
